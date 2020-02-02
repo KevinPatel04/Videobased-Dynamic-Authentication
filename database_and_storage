@@ -1,0 +1,50 @@
+**FOR REGISTERING NEW USERS**
+
+import pyrebase
+from datetime import datetime
+import pytz
+import firebase
+
+Config = {
+  apiKey: "AIzaSyBplgfDMaVZSDahuI2RwF24a7e2K4vVXcs",
+  authDomain: "videobase-dynamic-auth-system.firebaseapp.com",
+  databaseURL: "https://videobase-dynamic-auth-system.firebaseio.com",
+  projectId: "videobase-dynamic-auth-system",
+  storageBucket: "videobase-dynamic-auth-system.appspot.com",
+  messagingSenderId: "542414051699",
+  appId: "1:542414051699:web:043b564a6117971ac88d06"
+}
+
+firebase=pyrebase.initialize_app(Config)
+storage=firebase.storage()
+
+#add phone number here.
+path_to_cloud="Known_faces/"+phone_number+".jpg"
+
+#to get the url of the storage image
+#public_url=storage.child(path_to_cloud).get_url(None)
+
+#to upload the image in storage
+public_url=storage.child(path_to_cloud).put("#image file here")
+
+db = firebase.database()
+
+#get the encoding of the image and store in encoding variable
+encoding=""
+
+dt=datetime.now()
+tz = pytz.timezone('Asia/Kolkata')
+now = dt.astimezone(tz)
+day=now.strftime("%m-%d-%Y")
+time=now.strftime("%H:%M:%S")
+#print(public_url)
+data_to_upload = {
+    "Name":name
+    "url": public_url,
+    "encoding":encoding,
+    "status":1
+}
+
+
+add='videobase-dynamic-auth-system/'+'registered'+'#phone number here/'
+db.child(add).set(data_to_upload)
