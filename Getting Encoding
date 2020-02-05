@@ -1,0 +1,35 @@
+#getting encoding of known faces 
+import pyrebase
+from datetime import datetime
+import pytz
+import firebase
+
+Config = {
+  "apiKey": "AIzaSyBplgfDMaVZSDahuI2RwF24a7e2K4vVXcs",
+  "authDomain": "videobase-dynamic-auth-system.firebaseapp.com",
+ "databaseURL": "https://videobase-dynamic-auth-system.firebaseio.com",
+  "projectId": "videobase-dynamic-auth-system",
+  "storageBucket": "videobase-dynamic-auth-system.appspot.com",
+  "messagingSenderId": "542414051699",
+  "appId": "1:542414051699:web:043b564a6117971ac88d06"
+}
+
+firebase=pyrebase.initialize_app(Config)
+
+db=firebase.database()
+known_faces=db.child("RegisteredPerson/").get()
+
+key=known_faces.val()
+for phone in key:
+#this below loop should be executed as number of images we take. default i have taken 5.
+  path="RegisteredPerson/"+phone+"/encoding/"
+  obj=db.child(path).get()
+  size=len(obj.val())
+  for i in range(size):
+    path="RegisteredPerson/"+phone+"/encoding/"+str(i)
+    encodings=db.child(path).get()
+    print(encodings.val())
+
+
+#encoding will be return in the form of list so convert in array or whatever is necessary type to compare the encoding,
+#then do the comparing
