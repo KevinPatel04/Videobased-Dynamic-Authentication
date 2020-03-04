@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Security SIH</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+             https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <!----------------------------------------------->
+
+    <style>
+      .section {
+        height: 65%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .header {
+        height: 5%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: brown;
+      }
+      .bottom {
+        height: 30%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: aqua;
+      }
+      .side {
+        background: grey;
+      }
+
+      .centre {
+        background: black;
+      }
+
+      .main-wrapper {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Technobugs</a>
+          </div>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="/logout"
+                ><span class="glyphicon glyphicon-log-out"></span> Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div id="profile_div" class="section side col-sm-3">
+        <h1>Add user</h1>
+        <form style="flex-direction:column" id="profile">
+          {% csrf_token %} First name:
+          <input id="fname" type="text" name="First name" /><br />
+          Last name: <input id="lname" type="text" name="Last name" /><br />
+          Mobile no :
+          <input id="mno" type="number" name="Mobile number" /><br />
+          In Time : <input id="intime" type="time" name="In time" /><br />
+          Out Time : <input id="outtime" type="time" name="Out time" /><br />
+          <input type="submit" value="SUBMIT" id="button" />
+        </form>
+      </div>
+      <div class="section col-sm-6" id="video_stream"></div>
+      <div class="section side col-sm-3">
+        <h1>Logs</h1>
+        [
+        <div id="logs">
+          <!-- {% for dict_item in user1 %} {% for key, value in dict_item.items %}
+          <h1>Key: {{key}}</h1>
+          <br />
+          <h2>Value: {{value}}</h2>
+          <br />
+          {% endfor %} {% endfor %}-->
+        </div>
+        ]
+      </div>
+      <div class="bottom col-sm-12">
+        <h1>Notification</h1>
+      </div>
+    </div>
+  </body>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyBplgfDMaVZSDahuI2RwF24a7e2K4vVXcs",
+      authDomain: "videobase-dynamic-auth-system.firebaseapp.com",
+      databaseURL: "https://videobase-dynamic-auth-system.firebaseio.com",
+      projectId: "videobase-dynamic-auth-system",
+      storageBucket: "videobase-dynamic-auth-system.appspot.com",
+      messagingSenderId: "542414051699",
+      appId: "1:542414051699:web:4625898e615fba4dc88d06"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.database();
+    var d = new Date();
+
+    var year = d.getFullYear();
+    var mon = String(parseInt(d.getMonth()) + 1);
+    var date = d.getDate();
+    if (parseInt(d.getMonth()) < 10) {
+      mon = "0" + mon;
+    }
+
+    if (parseInt(date) < 10) {
+      date = "0" + date;
+    }
+    var fullDate = year + "-" + date + "-" + mon;
+    var dbRef = db.ref("dummy/logs/" + fullDate + "/8260318405");
+    dbRef.on("child_added", snap => {
+      snap = JSON.stringify(snap);
+      console.log(snap);
+      console.log("ll");
+    });
+  </script>
+</html>

@@ -1,0 +1,287 @@
+{% load static %}
+<html>
+
+<head>
+  <title>TechnoBugs</title>
+  <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
+  
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+               https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link rel = "stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.border-green{
+	border-left: 10px;border-left-color: green;border-left-style:solid
+}
+.border-red{
+	border-left: 10px;border-left-color: red;border-left-style:solid
+}
+</style>
+	</head>
+	<body>
+		<div>
+			<nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+				<div>
+  <a class="navbar-brand" href="#" style="font-size: 20px;"><b>TechnoBugs</b></a>
+</div>
+ <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+   <form class="form-inline my-2 my-lg-0" method="POST" action="gui1.html">
+   <!-- 	<button type="button" class="btn btn-light"  onclick="openCalender()" ><i class="fa fa-calendar calender"style="padding:4px;"></i></button>&nbsp 
+ -->
+<!--    	  <button class="fa fa-calendar btn btn-light" fa fa-calendar btn btn-light></button>&nbsp -->
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
+      <button class="btn btn-secondary my-2 my-sm-0 btn-sm" ><span class="fa fa-search" style="font-size:15px;color:white;padding:6px;"></span></button></a></form>
+      &nbsp<div class="form-inline my-2 my-lg-0"><button class="btn btn-danger my-2 my-sm-0" type="submit" onclick="window.location.href = '/logout';"><span class="fa fa-power-off" style="padding: 4px"></button></div>
+    
+  </div>
+</nav>
+		</div>
+
+
+		<div class="row" style="margin-right: 0;margin-left: 0;height: 100%">
+    <div class="col-lg-8 col-md-8 col-sm-8"">Live Streaming</div>
+    <div class="col-lg-4 col-md-4 col-sm-4" style="background-color: lightgrey;" id="logs1">
+    	<div class="row" style="margin-right: 0;margin-left: 0;margin-top: 5px;">
+    		<label class="col-9" style="font-size: 30px;"><b> Logs</b> </label>
+    		<div class="col-3" style="margin-right: 0;margin-top: 5px;"><button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal">Register</button></div>
+    		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registration Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="profile">
+          {% csrf_token %}
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group">
+              <label for="designation">Designation</label>
+              <input type="text" class="form-control" id="designation" name="designation" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group">
+              <label for="password">Contact Number</label>
+              <input type="tel" class="form-control" id="mno" name="Contact Number">
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="check1" name="check" onclick="myCheck()">
+              <label class="form-check-label" for="PermenantE">Permenant Employee</label>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1" id="duration">Access Time Limit</label>
+              <input type="date" class="form-control" id="duration1" name="duration1" >
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-secondary">Clear</button>
+        <button type="submit" class="btn btn-primary" name="button" id="button">Register</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+    	</div>
+      <div id="logs"></div>
+    </div>
+  </div>
+	</body>
+</html>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyBplgfDMaVZSDahuI2RwF24a7e2K4vVXcs",
+    authDomain: "videobase-dynamic-auth-system.firebaseapp.com",
+    databaseURL: "https://videobase-dynamic-auth-system.firebaseio.com",
+    projectId: "videobase-dynamic-auth-system",
+    storageBucket: "videobase-dynamic-auth-system.appspot.com",
+    messagingSenderId: "542414051699",
+    appId: "1:542414051699:web:4625898e615fba4dc88d06"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+function myCheck(){
+	var id = document.getElementById("duration");
+	var id1 = document.getElementById("duration1");
+	var checkId = document.getElementById("check1");
+
+	if(checkId.checked == true){
+		id.style.display = "none";
+		id1.style.display = "none";
+	}
+	else{
+		id.style.display = "block";
+		id1.style.display = "block";
+	}
+}
+ function openCalender(){
+ 	var id = document.getElementById("search");
+ 	var today = new Date();
+	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	
+	//alert(id.getAttribute("type"));
+
+	if(id.type == "date"){
+		id.setAttribute("type","search");
+
+	} else{
+		id.setAttribute("type","date");
+	}
+
+ }
+
+ 
+    $(document).ready(function () {
+      $("#video_stream").load("monitor");
+    });
+
+    $(document).on("submit", "#profile", function(e) {
+        var nullValues = 0;
+        var mobilenumber = false;
+        var input = document.querySelectorAll("input");
+        console.log("check box"+ document.getElementById("check1").checked)
+        
+        for (var i = 1; i < input.length; i++) {
+          console.log(input[i].id+"-"+input[i].value)
+          if (input[i].id != "check1") {
+          if (input[i].value == "") {
+            if(input[i].id=="duration1" && document.getElementById("check1").checked==true){
+              continue;
+            }
+            else{
+              alert(input[i].name + " cannot be null.");
+              nullValues += 1;
+            }
+          }
+          if (input[i].id == "mno") {
+            if (input[i].value.length == 10) {
+              mobilenumber = true;
+            } else {
+              alert("Please enter proper mobile number.");
+            }
+          }
+        }
+      }
+        e.preventDefault();
+        if ((nullValues == 0) & mobilenumber) {
+          $.ajax({
+            type: "POST",
+            url: "/user/addPerson",
+            data: {
+              name: $("#name").val(),
+              designation: $("#designation").val(),
+              mno: $("#mno").val(),
+              pEmp: $("#check1").val(),
+              duration: $("#duration1").val(),
+              csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function () {
+              alert("Created new user");
+            }
+          });
+        }
+      });
+
+
+    /*---------------LOGS-----------------*/
+    var log = [];
+    var logcnt = 0;
+    var rmv = 0;
+    var rootRef = {};
+    var fullDate = "";
+    var dbRef = {};
+    var data = {};
+
+
+    $(document).ready(function () {
+      
+      console.log("hi")
+      var d = new Date();
+
+      var year = d.getFullYear();
+      var mon = String(parseInt(d.getMonth()) + 1);
+      var date = d.getDate();
+      if (parseInt(d.getMonth()) < 10) {
+        mon = "0" + mon;
+      }
+
+      if (parseInt(date) < 10) {
+        date = "0" + date;
+      }
+      fullDate = year + "-" + date + "-" + mon;
+      //db = firebase.database();
+      rootRef = db.ref("dummy/logs/" + "2020-25-02" + "/8260318405");
+      //Query last= db.orderByKey().limitTolast(1);
+      rootRef.on("value", async function (snapshot) {
+        let snap = JSON.stringify(snapshot);
+        data = JSON.parse(snap);
+        var countKey = Object.keys(data).length-1;
+        //console.log(Object.keys(data));
+        //db = firebase.database();
+        dbRef = db.ref("dummy/logs/" + "2020-25-02" + "/8260318405/" + countKey);
+      dbRef.limitToLast(1).once("value").then(function(snap) {
+        logs = JSON.stringify(snap);
+        logs1 = JSON.parse(logs);
+        console.log(logs);
+        console.log(logs1.InURL);
+        if(logcnt >= 5){
+          var id = ".logbar"+rmv.toString();
+          console.log("-->"+ id)
+          $(id).remove();
+          rmv++;
+        }
+          if(logs1.Intime!=null){
+            console.log(data[countKey].InURL);
+            $("#logs").prepend('<div class=logbar'+logcnt+'>'+'<div class="card mb-3 border-green">' + '<div class="row no-gutters">' +
+              '<div class="col-md-8">' +
+              '<div class="card-body">' +
+              '<h5 class="card-title">Name</h5>' +
+              '<p class="card-text">'+logs1.Intime+'</p>' +
+              '</div>' +
+              '</div>' +
+              '<div class="col-md-4">' +
+              '<img src="'+ data[countKey].InURL +'" class="card-img">' +
+              '</div>' +
+              '</div>' +
+              '</div></div>' 
+              );
+              logcnt++;
+          }
+          else{
+            $("#logs").prepend('<div class=logbar' + logcnt + '>' +'<div class="card mb-3 border-red">' + '<div class="row no-gutters">' +
+              '<div class="col-md-8">' +
+              '<div class="card-body">' +
+              '<h5 class="card-title">Name</h5>' +
+              '<p class="card-text">' + logs1.Outtime + '</p>' +
+              '</div>' +
+              '</div>' +
+              '<div class="col-md-4">' +
+              '<img src="' + data[countKey].OutURL + '" class="card-img">' +
+              '</div>' +
+              '</div>' +
+              '</div>'
+            );
+            logcnt++;
+          }
+          console.log(logcnt);
+        });
+      });
+      });
+  
+      
+    
+	</script>
