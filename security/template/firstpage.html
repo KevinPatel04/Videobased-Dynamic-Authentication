@@ -244,13 +244,14 @@ function myCheck(){
           $(id).remove();
           rmv++;
         }
+        getUserData(8260318435).then(function (userData) {
           if(logs1.Intime!=null){
             console.log(data[countKey].InURL);
             $("#logs").prepend('<div class=logbar'+logcnt+'>'+'<div class="card mb-3 border-green">' + '<div class="row no-gutters">' +
               '<div class="col-md-8">' +
               '<div class="card-body">' +
-              '<h5 class="card-title">Name</h5>' +
-              '<p class="card-text">'+logs1.Intime+'</p>' +
+              '<h5 class="card-title">' + userData.name + '</h5>' +
+              '<p class="card-text">' + userData.designation + '<br>' + logs1.Intime + '</p>' +
               '</div>' +
               '</div>' +
               '<div class="col-md-4">' +
@@ -265,8 +266,8 @@ function myCheck(){
             $("#logs").prepend('<div class=logbar' + logcnt + '>' +'<div class="card mb-3 border-red">' + '<div class="row no-gutters">' +
               '<div class="col-md-8">' +
               '<div class="card-body">' +
-              '<h5 class="card-title">Name</h5>' +
-              '<p class="card-text">' + logs1.Outtime + '</p>' +
+              '<h5 class="card-title">' + userData.name + '</h5>' +
+              '<p class="card-text">' + userData.designation + '<br>' + logs1.Outtime + '</p>' +
               '</div>' +
               '</div>' +
               '<div class="col-md-4">' +
@@ -277,11 +278,27 @@ function myCheck(){
             );
             logcnt++;
           }
+          });
           console.log(logcnt);
         });
       });
       });
   
+      function getUserData(userID) {
+          //console.log("Userid---" + userID);
+
+          return db.ref('RegisteredPerson/' + userID + "/").once('value').then(function (snapshot) {
+            let snap = JSON.stringify(snapshot);
+            //console.log("SNAP----"+snap1)
+            data1 = JSON.parse(snap);
+            //console.log("-----"+data.Occupation)
+            return {
+              name: data1.name,
+              designation: data1.Occupation
+            };
+          });
+
+        }
       
     
 	</script>
