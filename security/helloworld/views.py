@@ -7,21 +7,21 @@ import json
 
 # Create your views here.
 config = {
-    'apiKey': "AIzaSyD7H6ZxUcR0M9acTTrg7cyV0Dxu4C27cUU",
-    'authDomain': "security-sgp.firebaseapp.com",
-    'databaseURL': "https://security-sgp.firebaseio.com",
-    'projectId': "security-sgp",
-    'storageBucket': "security-sgp.appspot.com",
-    'messagingSenderId': "193607441095",
-    'appId': "1:193607441095:web:5ce212a4b4e7228c7efce2",
-    'measurementId': "G-LDXTDF1K5V"
-    # 'apiKey': "AIzaSyBplgfDMaVZSDahuI2RwF24a7e2K4vVXcs",
-    # 'authDomain': "videobase-dynamic-auth-system.firebaseapp.com",
-    # 'databaseURL': "https://videobase-dynamic-auth-system.firebaseio.com",
-    # 'projectId': "videobase-dynamic-auth-system",
-    # 'storageBucket': "videobase-dynamic-auth-system.appspot.com",
-    # 'messagingSenderId': "542414051699",
-    # 'appId': "1:542414051699:web:4625898e615fba4dc88d06"
+    # 'apiKey': "AIzaSyD7H6ZxUcR0M9acTTrg7cyV0Dxu4C27cUU",
+    # 'authDomain': "security-sgp.firebaseapp.com",
+    # 'databaseURL': "https://security-sgp.firebaseio.com",
+    # 'projectId': "security-sgp",
+    # 'storageBucket': "security-sgp.appspot.com",
+    # 'messagingSenderId': "193607441095",
+    # 'appId': "1:193607441095:web:5ce212a4b4e7228c7efce2",
+    # 'measurementId': "G-LDXTDF1K5V"
+    'apiKey': "AIzaSyBplgfDMaVZSDahuI2RwF24a7e2K4vVXcs",
+    'authDomain': "videobase-dynamic-auth-system.firebaseapp.com",
+    'databaseURL': "https://videobase-dynamic-auth-system.firebaseio.com",
+    'projectId': "videobase-dynamic-auth-system",
+    'storageBucket': "videobase-dynamic-auth-system.appspot.com",
+    'messagingSenderId': "542414051699",
+    'appId': "1:542414051699:web:4625898e615fba4dc88d06"
 }
 
 firebase = pyrebase.initialize_app(config)
@@ -72,27 +72,8 @@ def logout(request):
     return render(request, "signIn.html")
 
 
-def get_logs_db():
-    x = datetime.datetime.now()
-    date = x.strftime("%m") + "-" + x.strftime("%d") + "-" + x.strftime("%Y")
-    i = db.child("01-28-2020").get()
-    return i
-
-
 def get_log(request):
-    results = get_logs_db()
-    # print(results.val())
-    user1 = {}
-    for users in results.each():
-        # {name": "Mortimer 'Morty' Smith"}
-        # key.append(str(user.key()) + )
-        # val.append(str(user.val()))
-        user1[str(users.key())] = str(users.val())
-
-    if user1 == {}:
-        return []
-    user1 = json.dumps(user1)
-    return JsonResponse(user1, safe=False)
+    return HttpResponse("<h1>Image Captured</h1>")
 
 
 def addPerson(request):
@@ -106,22 +87,24 @@ def addPerson(request):
         date = str(datetime.datetime.now())
         if pEmp == True:
             data = {
-                'Name': name,
+                'name': name,
                 'Contact No': mno,
-                'Designation': designation,
+                'Occupation': designation,
                 'RegisteredBy': uname,
                 'RegisteredOn': date,
-                'Permenant Employee': pEmp
+                # 'Permenant Employee': pEmp,
+                'status': '1'
             }
         else:
             data = {
-                'Name': name,
+                'name': name,
                 'Contact No': mno,
-                'Designation': designation,
-                'Permenant Employee': pEmp,
+                'Occupation': designation,
+                # 'Permenant Employee': pEmp,
                 'RegisteredBy': uname,
                 'RegisteredOn': date,
-                'duration': duration
+                'ExpiryDate': duration,
+                'status': '1'
             }
 
         db.child('RegisteredPerson').child(mno).set(data)

@@ -88,6 +88,7 @@
       </div>
       <div class="modal-footer">
         <button type="reset" class="btn btn-secondary">Clear</button>
+        <button type="button" class="btn btn-primary" name="capture" id="capture">Capture Image</button>
         <button type="submit" class="btn btn-primary" name="button" id="button">Register</button>
       </div>
       </form>
@@ -196,7 +197,18 @@ function myCheck(){
         }
       });
 
-
+      $('#capture').click(function () {
+          $.ajax({
+            type: "GET",
+            url: "get_log",
+            /*async: true,
+            data: { logDownload: true, file: $(this).attr("name") }*/
+            success: function () {
+              alert("Image Captured");
+            }
+          });
+          /*return false;*/
+        });
     /*---------------LOGS-----------------*/
     var log = [];
     var logcnt = 0;
@@ -224,81 +236,94 @@ function myCheck(){
       }
       fullDate = year + "-" + date + "-" + mon;
       //db = firebase.database();
-      rootRef = db.ref("dummy/logs/" + "2020-25-02" + "/8260318405");
-      //Query last= db.orderByKey().limitTolast(1);
-      rootRef.on("value", async function (snapshot) {
+      mainRef = db.ref("dummy/logs/logsFlag");
+      mainRef.on("value", async function (snapshot) {
+        let snap = JSON.stringify(snapshot);
+        userKey = JSON.parse(snap);
+        userKey = String(userKey);
+        console.log("++++Logs+++" + userKey);  
+      rootRef = db.ref("dummy/logs/" + "2020-25-02/" + userKey);
+      rootRef.once("value").then(function (snapshot) {
         let snap = JSON.stringify(snapshot);
         data = JSON.parse(snap);
         var countKey = Object.keys(data).length-1;
-        //console.log(Object.keys(data));
-        //db = firebase.database();
-        dbRef = db.ref("dummy/logs/" + "2020-25-02" + "/8260318405/" + countKey);
-      dbRef.limitToLast(1).once("value").then(function(snap) {
-        logs = JSON.stringify(snap);
-        logs1 = JSON.parse(logs);
-        console.log(logs);
-        console.log(logs1.InURL);
-        if(logcnt >= 5){
-          var id = ".logbar"+rmv.toString();
-          console.log("-->"+ id)
-          $(id).remove();
-          rmv++;
-        }
-        getUserData(8260318435).then(function (userData) {
-          if(logs1.Intime!=null){
-            console.log(data[countKey].InURL);
-            $("#logs").prepend('<div class=logbar'+logcnt+'>'+'<div class="card mb-3 border-green">' + '<div class="row no-gutters">' +
-              '<div class="col-md-8">' +
-              '<div class="card-body">' +
-              '<h5 class="card-title">' + userData.name + '</h5>' +
-              '<p class="card-text">' + userData.designation + '<br>' + logs1.Intime + '</p>' +
-              '</div>' +
-              '</div>' +
-              '<div class="col-md-4">' +
-              '<img src="'+ data[countKey].InURL +'" class="card-img">' +
-              '</div>' +
-              '</div>' +
-              '</div></div>' 
+        
+        dbRef = db.ref("dummy/logs/" + "2020-25-02/" + userKey +"/" + countKey);
+        flagRef = db.ref("Led");
+        flagRef.set({
+          flag:1
+        })
+        dbRef.limitToLast(1).once("value").then(function(snap) {
+          logs = JSON.stringify(snap);
+          logs1 = JSON.parse(logs);
+          var name;
+          //console.log("----->"+getUserData(8260318435));
+        
+          //console.log("name = " + logs1)
+        
+          if(logcnt >= 5){
+            var id = ".logbar"+rmv.toString();
+            console.log("-->"+ id)
+            $(id).remove();
+            rmv++;
+          }
+          getUserData(userKey).then(function (userData) {
+            console.log("name = " + userData.name)
+            if(logs1.Intime!=null){
+              console.log(data[countKey].InURL);
+              $("#logs").prepend('<div class=logbar'+logcnt+'>'+'<div class="card mb-3 border-green">' + '<div class="row no-gutters">' +
+                '<div class="col-md-8">' +
+                '<div class="card-body">' +
+                '<h5 class="card-title">' + userData.name + '</h5>' +
+                '<p class="card-text">' + userData.designation + '<br>' + logs1.Intime + '</p>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-4">' +
+                '<img src="'+ data[countKey].InURL +'" class="card-img">' +
+                '</div>' +
+                '</div>' +
+                '</div></div>' 
+                );
+                logcnt++;
+            }
+            else{
+              $("#logs").prepend('<div class=logbar' + logcnt + '>' +'<div class="card mb-3 border-red">' + '<div class="row no-gutters">' +
+                '<div class="col-md-8">' +
+                '<div class="card-body">' +
+                '<h5 class="card-title">'+userData.name + '</h5>' +
+                '<p class="card-text">' + userData.designation + '<br>'  + logs1.Outtime + '</p>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-4">' +
+                '<img src="' + data[countKey].OutURL + '" class="card-img">' +
+                '</div>' +
+                '</div>' +
+                '</div>'
               );
-              logcnt++;
-          }
-          else{
-            $("#logs").prepend('<div class=logbar' + logcnt + '>' +'<div class="card mb-3 border-red">' + '<div class="row no-gutters">' +
-              '<div class="col-md-8">' +
-              '<div class="card-body">' +
-              '<h5 class="card-title">' + userData.name + '</h5>' +
-              '<p class="card-text">' + userData.designation + '<br>' + logs1.Outtime + '</p>' +
-              '</div>' +
-              '</div>' +
-              '<div class="col-md-4">' +
-              '<img src="' + data[countKey].OutURL + '" class="card-img">' +
-              '</div>' +
-              '</div>' +
-              '</div>'
-            );
-            logcnt++;
-          }
+                logcnt++;
+              }
+            });
+            mainRef.set("");
+            console.log(logcnt);
           });
-          console.log(logcnt);
         });
       });
-      });
+    });
   
-      function getUserData(userID) {
-          //console.log("Userid---" + userID);
-
-          return db.ref('RegisteredPerson/' + userID + "/").once('value').then(function (snapshot) {
-            let snap = JSON.stringify(snapshot);
-            //console.log("SNAP----"+snap1)
-            data1 = JSON.parse(snap);
-            //console.log("-----"+data.Occupation)
-            return {
-              name: data1.name,
-              designation: data1.Occupation
-            };
-          });
-
-        }
-      
+      function getUserData(userID){
+        console.log("Userid---" + userID);
+        
+        return db.ref('RegisteredPerson/' + userID + "/").once('value').then(function (snapshot) {
+          let snap = JSON.stringify(snapshot);
+          //console.log("SNAP----"+snap1)
+          data1 = JSON.parse(snap);
+          console.log("-----"+data1.name)
+          return {
+            name: data1.name,
+            designation: data1.Occupation
+          };
+        });
+        
+      }
     
 	</script>
