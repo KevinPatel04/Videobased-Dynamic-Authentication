@@ -1,10 +1,12 @@
+import os
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 import datetime
 import pyrebase
 import json
-
+import numpy as np
+import cv2
 # Create your views here.
 config = {
     # 'apiKey': "AIzaSyD7H6ZxUcR0M9acTTrg7cyV0Dxu4C27cUU",
@@ -26,6 +28,7 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
+storage = firebase.storage()
 auth = firebase.auth()
 authToken = ""
 uname = ""
@@ -72,7 +75,32 @@ def logout(request):
     return render(request, "signIn.html")
 
 
-def get_log(request):
+def capture_img(request):
+    cap = cv2.VideoCapture(0)
+    directory = r"G:\Sem 6\SGP\Django\git_hub\Videobased-Dynamic-Authentication\security\registeration images"
+    os.chdir(directory)
+    key = request.POST['mno']
+    i = 0
+    while(i < 10):
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        i = i+1
+        print(frame)
+        # Our operations on the frame come here
+        filename = str(key) + "_" + str(i)+'.jpg'
+        # writting the resulting frame
+        cv2.imwrite(filename, frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # When everything done, release the capture
+    img = cv2.imread(filename)
+
+    cv2.imshow('Test image', img)
+
+    cv2.waitKey(0)
+    cap.release()
+    cv2.destroyAllWindows()
     return HttpResponse("<h1>Image Captured</h1>")
 
 
@@ -108,5 +136,12 @@ def addPerson(request):
             }
 
         db.child('RegisteredPerson').child(mno).set(data)
-
+        i = 0
+        while (i < 10):
+            i = i+1
+            path_to_cloud = "Known_faces/"+str(mno)+"_" + str(i)+".jpg"
+            imgFile = r"G:\Sem 6\SGP\Django\git_hub\Videobased-Dynamic-Authentication\security\registeration images\\" + \
+                str(mno) + "_" + str(i) + ".jpg"
+            print(imgFile)
+            public_url = storage.child(path_to_cloud).put(imgFile)
     return HttpResponse("<h1>form submitted</h1>")

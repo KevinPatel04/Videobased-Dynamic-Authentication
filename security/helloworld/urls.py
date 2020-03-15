@@ -8,7 +8,7 @@ urlpatterns = [
     path('', views.signIn, name='signIn'),
     path('postsign', views.postsign, name='welcome'),
     path('screen', views.homePage, name='homePage'),
-    path('get_log', views.get_log, name='get_log'),
+    path('capture_img', views.capture_img, name='capture_img'),
     path('user/addPerson', views.addPerson, name='submitted'),
     path('monitor/', lambda r: StreamingHttpResponse(gen(VideoCamera()),
                                                      content_type='multipart/x-mixed-replace; boundary=frame')),

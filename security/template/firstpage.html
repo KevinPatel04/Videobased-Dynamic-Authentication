@@ -112,6 +112,7 @@
     messagingSenderId: "542414051699",
     appId: "1:542414051699:web:4625898e615fba4dc88d06"
   };
+  flag = 0;
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   var db = firebase.database();
@@ -154,10 +155,10 @@ function myCheck(){
         var nullValues = 0;
         var mobilenumber = false;
         var input = document.querySelectorAll("input");
-        console.log("check box"+ document.getElementById("check1").checked)
+        //console.log("check box"+ document.getElementById("check1").checked)
         
         for (var i = 1; i < input.length; i++) {
-          console.log(input[i].id+"-"+input[i].value)
+          //console.log(input[i].id+"-"+input[i].value)
           if (input[i].id != "check1") {
           if (input[i].value == "") {
             if(input[i].id=="duration1" && document.getElementById("check1").checked==true){
@@ -178,7 +179,7 @@ function myCheck(){
         }
       }
         e.preventDefault();
-        if ((nullValues == 0) & mobilenumber) {
+        if ((nullValues == 0) & mobilenumber & flag) {
           $.ajax({
             type: "POST",
             url: "/user/addPerson",
@@ -192,21 +193,35 @@ function myCheck(){
             },
             success: function () {
               alert("Created new user");
+              flag=0;
             }
           });
+        }
+        else if(flag==0){
+          alert("You need to capture image");
         }
       });
 
       $('#capture').click(function () {
+         if ($("#mno").val() != "") {
+          
           $.ajax({
-            type: "GET",
-            url: "get_log",
-            /*async: true,
-            data: { logDownload: true, file: $(this).attr("name") }*/
+            type: "POST",
+            url: "capture_img",
+            /*async: true,*/
+            data: { mno: $("#mno").val(),
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+          },
             success: function () {
               alert("Image Captured");
+              flag =1;
             }
           });
+      }
+      else{
+        alert("You need to enter Number to Capture image");
+      }
+
           /*return false;*/
         });
     /*---------------LOGS-----------------*/
