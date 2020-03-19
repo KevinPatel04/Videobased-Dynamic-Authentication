@@ -15,6 +15,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel = "stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- AWS SDK -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.278.1/aws-sdk.min.js"></script>
+
+<!-- Video Js-->
+<link rel="stylesheet" href="https://vjs.zencdn.net/6.6.3/video-js.css">
+<script src="https://vjs.zencdn.net/6.6.3/video.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.14.1/videojs-contrib-hls.js"></script>
 <style>
 .border-green{
 	border-left: 10px;border-left-color: green;border-left-style:solid
@@ -22,6 +30,17 @@
 .border-red{
 	border-left: 10px;border-left-color: red;border-left-style:solid
 }
+ #playerContainer,
+            .player {
+                width: 100%;
+                height: auto;
+                min-height: 400px;
+                background-color: black;
+                outline: none;
+            }
+            .vjs-big-play-button {
+                display: none !important;
+            }
 </style>
 	</head>
 	<body>
@@ -48,7 +67,7 @@
 
 
 		<div class="row" style="margin-right: 0;margin-left: 0;height: 100%">
-    <div class="col-lg-8 col-md-8 col-sm-8"">Live Streaming</div>
+    <div class="col-lg-8 col-md-8 col-sm-8"><br><br><div id="playerContainer"><video id="videojs" class="player video-js vjs-default-skin" controls autoplay></video></div>Live Streaming</div>
     <div class="col-lg-4 col-md-4 col-sm-4" style="background-color: lightgrey;" id="logs1">
     	<div class="row" style="margin-right: 0;margin-left: 0;margin-top: 5px;">
     		<label class="col-9" style="font-size: 30px;"><b> Logs</b> </label>
@@ -251,30 +270,30 @@ function myCheck(){
       }
       fullDate = year + "-" + date + "-" + mon;
       //db = firebase.database();
-      mainRef = db.ref("dummy/logs/logsFlag");
+      mainRef = db.ref("Logs/logsFlag");
       mainRef.on("value", async function (snapshot) {
         let snap = JSON.stringify(snapshot);
         userKey = JSON.parse(snap);
         userKey = String(userKey);
         console.log("++++Logs+++" + userKey);  
-      rootRef = db.ref("dummy/logs/" + "2020-25-02/" + userKey);
+      rootRef = db.ref("Logs/" + fullDate +"/" + userKey);
       rootRef.once("value").then(function (snapshot) {
         let snap = JSON.stringify(snapshot);
         data = JSON.parse(snap);
         var countKey = Object.keys(data).length-1;
         
-        dbRef = db.ref("dummy/logs/" + "2020-25-02/" + userKey +"/" + countKey);
+        dbRef = db.ref("Logs/" + fullDate+"/" + userKey +"/" + countKey);
         flagRef = db.ref("Led");
         flagRef.set({
           flag:1
         })
-        dbRef.limitToLast(1).once("value").then(function(snap) {
+        dbRef.once("value").then(function(snap) {
           logs = JSON.stringify(snap);
           logs1 = JSON.parse(logs);
           var name;
           //console.log("----->"+getUserData(8260318435));
         
-          //console.log("name = " + logs1)
+          //console.log("logs1 = " + logs1)
         
           if(logcnt >= 5){
             var id = ".logbar"+rmv.toString();
@@ -283,8 +302,9 @@ function myCheck(){
             rmv++;
           }
           getUserData(userKey).then(function (userData) {
+            console.log("Check variable"+logs1.OutURL)
             console.log("name = " + userData.name)
-            if(logs1.Intime!=null){
+            if(logs1.OutURL=="URL"){
               console.log(data[countKey].InURL);
               $("#logs").prepend('<div class=logbar'+logcnt+'>'+'<div class="card mb-3 border-green">' + '<div class="row no-gutters">' +
                 '<div class="col-md-8">' +
@@ -340,5 +360,64 @@ function myCheck(){
         });
         
       }
-    
+        /*---------------Live streaming-----------------*/
+      var protocol = 'HLS';
+      var streamName = 'security';
+
+        // Step 1: Configure SDK Clients
+        var options = {
+          accessKeyId: 'AKIAWZWHC4N233IMV4HK',
+          secretAccessKey: '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',
+          sessionToken: undefined,
+          region: 'ap-south-1',
+          endpoint: undefined
+        }
+        var kinesisVideo = new AWS.KinesisVideo(options);
+        var kinesisVideoArchivedContent = new AWS.KinesisVideoArchivedMedia(options);
+        
+        // Step 2: Get a data endpoint for the stream
+          console.log('Fetching data endpoint');
+          kinesisVideo.getDataEndpoint({
+            StreamName: streamName,
+            APIName: "GET_HLS_STREAMING_SESSION_URL"
+          }, function (err, response) {
+            if (err) { return console.error(err); }
+            console.log('Data endpoint: ' + response.DataEndpoint);
+            kinesisVideoArchivedContent.endpoint = new AWS.Endpoint(response.DataEndpoint);
+            var consoleInfo = 'Fetching ' + protocol + ' Streaming Session URL';
+              console.log(consoleInfo);
+            
+            kinesisVideoArchivedContent.getHLSStreamingSessionURL({
+              StreamName: streamName,
+              PlaybackMode: 'LIVE',
+              HLSFragmentSelector: {
+                FragmentSelectorType: 'SERVER_TIMESTAMP',
+                TimestampRange: "LIVE" === "LIVE" ? undefined : {
+                  StartTimestamp: new Date($('#startTimestamp').val()),
+                  EndTimestamp: new Date($('#endTimestamp').val())
+                }
+              },
+              //ContainerFormat: 'FRAGMENTED_MP4',
+              DiscontinuityMode: 'ALWAYS',
+              //DisplayFragmentTimestamp: 'NEVER',
+              //DisplayFragmentNumber: 'NEVER',
+              MaxMediaPlaylistFragmentResults: parseInt(null),
+              Expires: 3600
+            }, function (err, response) {
+              if (err) { return console.error(err); }
+              console.log('HLS Streaming Session URL: ' + response.HLSStreamingSessionURL);    
+              var playerElement = $('#videojs');
+                playerElement.show();
+                var player = videojs('videojs');
+                console.log('Created VideoJS Player');
+                player.src({
+                  src: response.HLSStreamingSessionURL,
+                  type: 'application/x-mpegURL'
+                });
+                console.log('Set player source');
+                player.play();
+                console.log('Starting playback');
+              
+            });
+          });
 	</script>
