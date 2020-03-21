@@ -14,4 +14,6 @@ urlpatterns = [
                                                      content_type='multipart/x-mixed-replace; boundary=frame')),
     path('logout', views.logout, name='loggedout'),
     path('index', views.index, name='index'),
+    path('logs',views.logs,name="logs"),
+    path('logsOf',views.logsOf,name="logsOf")
 ]

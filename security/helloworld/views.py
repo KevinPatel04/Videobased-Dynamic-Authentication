@@ -127,3 +127,11 @@ def addPerson(request):
         db.child('RegisteredPerson').child(mno).set(data)
 
     return HttpResponse("<h1>form submitted</h1>")
+    
+def logs(request):
+    return render(request,'logs.html')
+
+
+def logsOf(request):
+    
+    return render(request,'logsOf.html')

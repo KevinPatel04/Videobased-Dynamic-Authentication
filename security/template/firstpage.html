@@ -15,7 +15,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel = "stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript" src="{% static 'js/logs.js'%}"></script>
 <style>
+#result{
+  background-color: lightgray;
+  color: black;
+  border:1px solid black;
+  border-radius: 5px;
+}
 .border-green{
 	border-left: 10px;border-left-color: green;border-left-style:solid
 }
@@ -34,24 +41,26 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-   <form class="form-inline my-2 my-lg-0" method="POST" action="gui1.html">
+   <div class="form-inline my-2 my-lg-0" >
    <!-- 	<button type="button" class="btn btn-light"  onclick="openCalender()" ><i class="fa fa-calendar calender"style="padding:4px;"></i></button>&nbsp 
  -->
 <!--    	  <button class="fa fa-calendar btn btn-light" fa fa-calendar btn btn-light></button>&nbsp -->
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
-      <button class="btn btn-secondary my-2 my-sm-0 btn-sm" ><span class="fa fa-search" style="font-size:15px;color:white;padding:6px;"></span></button></a></form>
+      
+<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
+      <button class="btn btn-secondary my-2 my-sm-0 btn-sm" ><span class="fa fa-search" id="butt" style="font-size:15px;color:white;padding:6px;"></span></button></div>
       &nbsp<div class="form-inline my-2 my-lg-0"><button class="btn btn-danger my-2 my-sm-0" type="submit" onclick="window.location.href = '/logout';"><span class="fa fa-power-off" style="padding: 4px"></button></div>
-    
   </div>
 </nav>
+
 		</div>
 
 
 		<div class="row" style="margin-right: 0;margin-left: 0;height: 100%">
-    <div class="col-lg-8 col-md-8 col-sm-8"">Live Streaming</div>
+    <div class="col-lg-8 col-md-8 col-sm-8">Live Streaming</div>
     <div class="col-lg-4 col-md-4 col-sm-4" style="background-color: lightgrey;" id="logs1">
     	<div class="row" style="margin-right: 0;margin-left: 0;margin-top: 5px;">
-    		<label class="col-9" style="font-size: 30px;"><b> Logs</b> </label>
+        <label class="col-9" style="font-size: 30px;"><b> Logs</b> </label>
+        <ul class="list-group" style="position:absolute;z-index: 1" id="result"></ul>
     		<div class="col-3" style="margin-right: 0;margin-top: 5px;"><button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal">Register</button></div>
     		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
