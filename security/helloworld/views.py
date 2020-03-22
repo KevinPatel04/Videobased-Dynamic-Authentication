@@ -75,6 +75,12 @@ def logout(request):
     return render(request, "signIn.html")
 
 
+def resetPassword(request):
+    global authToken
+    authToken = ""
+    return render(request, "resetpassword.html")
+
+
 def capture_img(request):
     cap = cv2.VideoCapture(0)
     directory = r"G:\Sem 6\SGP\Django\git_hub\Videobased-Dynamic-Authentication\security\registeration images"
@@ -144,4 +150,5 @@ def addPerson(request):
                 str(mno) + "_" + str(i) + ".jpg"
             print(imgFile)
             public_url = storage.child(path_to_cloud).put(imgFile)
+            os.remove(imgFile)
     return HttpResponse("<h1>form submitted</h1>")

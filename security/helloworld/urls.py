@@ -13,5 +13,5 @@ urlpatterns = [
     path('monitor/', lambda r: StreamingHttpResponse(gen(VideoCamera()),
                                                      content_type='multipart/x-mixed-replace; boundary=frame')),
     path('logout', views.logout, name='loggedout'),
-    path('index', views.index, name='index'),
+    path('reset', views.resetPassword, name='reset'),
 ]
