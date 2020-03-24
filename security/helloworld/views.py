@@ -69,6 +69,12 @@ def postsign(request):
     return render(request, "firstPage.html")
 
 
+def back(request):
+    if authToken != "":
+        return render(request, "firstPage.html")
+    return render(request, "signIn.html")
+
+
 def logout(request):
     global authToken
     authToken = ""
@@ -152,3 +158,8 @@ def addPerson(request):
             public_url = storage.child(path_to_cloud).put(imgFile)
             os.remove(imgFile)
     return HttpResponse("<h1>form submitted</h1>")
+
+
+def logsOf(request):
+
+    return render(request, 'logsOf.html')
