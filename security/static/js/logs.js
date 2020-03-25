@@ -19,7 +19,7 @@ var firebaseConfig = {
   rootRef.on("value", async function(snapshot) {
     let snap = JSON.stringify(snapshot);
     data = JSON.parse(snap);
-    console.log(data)
+    //console.log(data)
   
   var searchField;
     $(document).ready(function() {
@@ -53,7 +53,7 @@ var firebaseConfig = {
           var click_text = $(this)
             .text()
             .split(" ");
-          console.log(click_text[2]);
+          //console.log(click_text[2]);
           $("#result").html("");
           
           $(location).attr('href',"logsOf?name="+click_text[0]+click_text[1]+"&"+"id="+click_text[2])

@@ -43,19 +43,20 @@ $(document).ready(function () {
       let snap = JSON.stringify(snapshot);
       root = JSON.parse(snap);
       registeredPerson = root["RegisteredPerson"];
-      logs = root["dummy"]["logs"];
+      logs = root["logs"];
       profileImage = registeredPerson[id].dp;
       $("#p").attr("src", profileImage);
       $('#designation').append(registeredPerson[id].occupation)
       $("#expiryDate").append(registeredPerson[id].ExpiryDate);
+      $("#registeredBy").append(registeredPerson[id].RegisteredPerson);
       
       
       for (dates in logs) {
         for (total_entries in logs[dates][id]) {
-          console.log(total_entries)
+          //console.log(total_entries)
           if(logs[dates][id][total_entries]){
             var data2=[]
-            console.log("We may have more than one entries on "+dates)
+            //console.log("We may have more than one entries on "+dates)
             data2.push(dates)
             data2.push(total_entries)
             if(logs[dates][id][total_entries]["Intime"])
@@ -97,7 +98,7 @@ $(document).ready(function () {
        let snap = JSON.stringify(snapshot);
       root = JSON.parse(snap);
       registeredPerson = root["RegisteredPerson"];
-      logs = root["dummy"]["logs"];
+      logs = root["logs"];
       
         for (dates in logs) {
           for(contactNo in logs[dates]){
