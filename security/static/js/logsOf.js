@@ -44,7 +44,7 @@ $(document).ready(function() {
       $("#p").attr("src", profileImage);
       $('#designation').append(registeredPerson[id].Designation)
       $("#expiryDate").append(registeredPerson[id].ExpiryDate);
-      $("#registeredBy").append(registeredPerson[id].RegisteredPerson);
+      $("#registeredBy").append(registeredPerson[id].RegisteredBy);
 
       for (dates in logs) {
         for (total_entries in logs[dates][id]) {
