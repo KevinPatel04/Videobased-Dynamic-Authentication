@@ -43,10 +43,10 @@ $(document).ready(function () {
       let snap = JSON.stringify(snapshot);
       root = JSON.parse(snap);
       registeredPerson = root["RegisteredPerson"];
-      logs = root["logs"];
+      logs = root["Logs"];
       profileImage = registeredPerson[id].dp;
       $("#p").attr("src", profileImage);
-      $('#designation').append(registeredPerson[id].occupation)
+      $('#designation').append(registeredPerson[id].Designation)
       $("#expiryDate").append(registeredPerson[id].ExpiryDate);
       $("#registeredBy").append(registeredPerson[id].RegisteredBy);
       
@@ -98,7 +98,7 @@ $(document).ready(function () {
        let snap = JSON.stringify(snapshot);
       root = JSON.parse(snap);
       registeredPerson = root["RegisteredPerson"];
-      logs = root["logs"];
+      logs = root["Logs"];
       
         for (dates in logs) {
           for(contactNo in logs[dates]){
