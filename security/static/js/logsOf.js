@@ -44,14 +44,8 @@ $(document).ready(function() {
       $("#p").attr("src", profileImage);
       $("#designation").append(registeredPerson[id].occupation);
       $("#expiryDate").append(registeredPerson[id].ExpiryDate);
-<<<<<<< HEAD
       $("#registeredBy").append(registeredPerson[id].RegisteredPerson);
 
-=======
-      $("#registeredBy").append(registeredPerson[id].RegisteredBy);
-      
-      
->>>>>>> b9bb938991ee7078a2460aa9e425f4078443a4c1
       for (dates in logs) {
         for (total_entries in logs[dates][id]) {
           //console.log(total_entries)
@@ -90,22 +84,12 @@ $(document).ready(function() {
       $(location).attr("href", "logsOf?name=*");
     } else {
       var rootRef = firebase.database().ref();
-<<<<<<< HEAD
       rootRef.on("value", async function(snapshot) {
         let snap = JSON.stringify(snapshot);
         root = JSON.parse(snap);
         registeredPerson = root["RegisteredPerson"];
         logs = root["logs"];
 
-=======
-    rootRef.on("value", async function(snapshot) {
-      
-       let snap = JSON.stringify(snapshot);
-      root = JSON.parse(snap);
-      registeredPerson = root["RegisteredPerson"];
-      logs = root["logs"];
-      
->>>>>>> b9bb938991ee7078a2460aa9e425f4078443a4c1
         for (dates in logs) {
           for (contactNo in logs[dates]) {
             for (total_entries in logs[dates][contactNo]) {
