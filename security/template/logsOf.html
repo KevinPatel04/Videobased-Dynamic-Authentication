@@ -115,16 +115,19 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        
         <div
           class="collapse navbar-collapse justify-content-end"
           id="navbarSupportedContent"
         >
-        <div class="form-inline my-2 my-lg-0">
-        <button class="btn btn-secondary my-2 my-sm-0 btn-sm" onclick="window.location.href = 'back';"><span class="fas fa-caret-square-left"
-            style="font-size:15px;color:white;padding:6px;" >Home</span></button></a></div>
-        &nbsp<div class="form-inline my-2 my-lg-0"><button class="btn btn-danger my-2 my-sm-0" type="submit"
-            onclick="window.location.href = '/logout';"><span class="fa fa-power-off" style="padding: 4px"></button></div>
+          <form
+            class="form-inline my-2 my-lg-0"
+            method="POST"
+            action="logout.html"
+          >
+            <button class="btn btn-danger my-2 my-sm-0 mr-0" type="submit">
+              <span class="fa fa-power-off" style="padding: 4px"></span>
+            </button>
+          </form>
         </div>
       </nav>
     </div>
@@ -138,7 +141,7 @@
           <p style="color: white" id="designation" class="title"></p>
           <p style="color: white" id="contactNo">Contact Number:</p>
           <p style="color: white" id="expiryDate">Expires on:</p>
-          <p style="color: white" id="registeredBy">Registered by: </p>
+          <p style="color: white" id="registeredBy">Registered by:</p>
           <button class="btn btn-light">Edit</button>
         </div>
       </div>
