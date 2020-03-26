@@ -26,21 +26,29 @@ data = [];
 firebase.initializeApp(firebaseConfig);
 
 $(document).ready(function() {
+  
   const urlParams = new URLSearchParams(window.location.search);
 
   if (urlParams.has("name") & urlParams.has("id")) {
     name = urlParams.get("name");
     id = urlParams.get("id");
-    $("#name").append(name);
-    $("#contactNo").append(id);
+    
 
     var rootRef = firebase.database().ref();
     rootRef.on("value", async function(snapshot) {
+      data=[]
+      $("#name").html("");
+      $("#contactNo").html("Contact number: ");
+      $('#designation').html("")
+      $("#expiryDate").html("Expires on: ")
+      $("#registeredBy").html("Registered by: ")
       let snap = JSON.stringify(snapshot);
       root = JSON.parse(snap);
       registeredPerson = root["RegisteredPerson"];
       logs = root["Logs"];
       profileImage = registeredPerson[id].dp;
+      $("#name").append(name);
+      $("#contactNo").append(id);
       $("#p").attr("src", profileImage);
       $('#designation').append(registeredPerson[id].Designation)
       $("#expiryDate").append(registeredPerson[id].ExpiryDate);
@@ -48,12 +56,13 @@ $(document).ready(function() {
 
       for (dates in logs) {
         for (total_entries in logs[dates][id]) {
-          //console.log(total_entries)
+          
           if (logs[dates][id][total_entries]) {
             var data2 = [];
-            //console.log("We may have more than one entries on "+dates)
+            
             data2.push(dates);
             data2.push(total_entries);
+
             if (logs[dates][id][total_entries]["Intime"])
               data2.push(logs[dates][id][total_entries]["Intime"]);
             if (logs[dates][id][total_entries]["Outtime"]) {
@@ -67,6 +76,8 @@ $(document).ready(function() {
       }
 
       $("#dataTable").DataTable({
+        retrieve: true,
+
         data: data,
         columns: [
           { title: "Date" },
@@ -75,6 +86,7 @@ $(document).ready(function() {
           { title: "Out Time" }
         ]
       });
+      
     });
   } else if (urlParams.has("name") & !urlParams.has("id")) {
     $(".col-lg-3 col-md-3 col-sm-3").remove();
@@ -158,4 +170,22 @@ $(document).ready(function() {
       });
     }
   }
+});
+$(document).on("submit", "#profile2", function(e) {
+  const urlParams = new URLSearchParams(window.location.search);
+  mno=urlParams.get('id');
+  e.preventDefault()
+  $.ajax({
+        type: "POST",
+        url: '/user/dateChanged',
+        data: {
+          mno:mno,
+          duration: $("#duration3").val(),
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function () {
+          //alert("Date changed");
+          //flag=0;
+        }
+      });
 });

@@ -14,17 +14,28 @@
       type="text/css"
       href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css"
     />
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="static/js/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  
+  
+  <link rel = "stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script
       type="text/javascript"
       charset="utf8"
       src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"
     ></script>
+    <script src="https://cdn.datatables.net/colreorder/1.5.2/js/dataTables.colReorder.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="{% static 'js/logsOf.js'%}"></script>
 
@@ -115,16 +126,20 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        
         <div
           class="collapse navbar-collapse justify-content-end"
           id="navbarSupportedContent"
         >
-        <div class="form-inline my-2 my-lg-0">
-        <button class="btn btn-secondary my-2 my-sm-0 btn-sm" onclick="window.location.href = 'back';"><span class="fas fa-caret-square-left"
-            style="font-size:15px;color:white;padding:6px;" >Home</span></button></a></div>
-        &nbsp<div class="form-inline my-2 my-lg-0"><button class="btn btn-danger my-2 my-sm-0" type="submit"
-            onclick="window.location.href = '/logout';"><span class="fa fa-power-off" style="padding: 4px"></button></div>
+          <form
+            class="form-inline my-2 my-lg-0"
+            method="POST"
+            action="logout"
+          >
+          {%csrf_token%}
+            <button class="btn btn-danger my-2 my-sm-0 mr-0"  type="submit">
+              <span class="fa fa-power-off" style="padding: 4px"></span>
+            </button>
+          </form>
         </div>
       </nav>
     </div>
@@ -139,10 +154,36 @@
           <p style="color: white" id="contactNo">Contact Number:</p>
           
           <p style="color: white" id="expiryDate">Expires on:</p>
-          <p style="color: white" id="registeredBy">Registered by: </p>
-          <button class="btn btn-light">Edit</button>
+          <p style="color: white" id="registeredBy">Registered by:</p>
+          <div class="col-3" style="margin-right: 0;margin-top: 5px;"><button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal2">Edit</button></div>
+    		<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel2">Change Access Time</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="profile2">
+          {% csrf_token %}
+            
+            <div class="form-group">
+              <label for="exampleInputPassword1" id="duration2">Access Time Limit</label>
+              <input type="date" class="form-control" id="duration3" name="duration3" >
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-secondary">Clear</button>
+        <button type="submit" class="btn btn-primary" name="button" id="button">Change</button>
+      </div>
+      </form>
+    </div>
+  </div>
         </div>
       </div>
+    </div>
       <div class="col-lg-9 col-md-9 col-sm-9">
         <div
           class="container"
@@ -153,4 +194,7 @@
       </div>
     </div>
   </body>
+  <script>
+    
+  </script>
 </html>

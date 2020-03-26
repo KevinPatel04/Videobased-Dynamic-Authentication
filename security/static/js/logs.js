@@ -10,6 +10,9 @@ var firebaseConfig = {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   
+  function unregistered(){
+    $(location).attr('href',"unregistered")
+  }
   
   var rootRef = firebase
     .database()
@@ -23,6 +26,7 @@ var firebaseConfig = {
   
   var searchField;
     $(document).ready(function() {
+
       $.ajaxSetup({ cache: false });
       $("#search").keyup(function() {
         $("#result").html("");
@@ -67,4 +71,64 @@ var firebaseConfig = {
       
     });
   });
+  /*---------------Live streaming-----------------*/
+  var protocol = 'HLS';
+      var streamName = 'security';
+
+        // Step 1: Configure SDK Clients
+        var options = {
+          accessKeyId: 'AKIAWZWHC4N233IMV4HK',
+          secretAccessKey: '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',
+          sessionToken: undefined,
+          region: 'ap-south-1',
+          endpoint: undefined
+        }
+        var kinesisVideo = new AWS.KinesisVideo(options);
+        var kinesisVideoArchivedContent = new AWS.KinesisVideoArchivedMedia(options);
+        
+        // Step 2: Get a data endpoint for the stream
+          console.log('Fetching data endpoint');
+          kinesisVideo.getDataEndpoint({
+            StreamName: streamName,
+            APIName: "GET_HLS_STREAMING_SESSION_URL"
+          }, function (err, response) {
+            if (err) { return console.error(err); }
+            console.log('Data endpoint: ' + response.DataEndpoint);
+            kinesisVideoArchivedContent.endpoint = new AWS.Endpoint(response.DataEndpoint);
+            var consoleInfo = 'Fetching ' + protocol + ' Streaming Session URL';
+              console.log(consoleInfo);
+            
+            kinesisVideoArchivedContent.getHLSStreamingSessionURL({
+              StreamName: streamName,
+              PlaybackMode: 'LIVE',
+              HLSFragmentSelector: {
+                FragmentSelectorType: 'SERVER_TIMESTAMP',
+                TimestampRange: "LIVE" === "LIVE" ? undefined : {
+                  StartTimestamp: new Date($('#startTimestamp').val()),
+                  EndTimestamp: new Date($('#endTimestamp').val())
+                }
+              },
+              //ContainerFormat: 'FRAGMENTED_MP4',
+              DiscontinuityMode: 'ALWAYS',
+              //DisplayFragmentTimestamp: 'NEVER',
+              //DisplayFragmentNumber: 'NEVER',
+              MaxMediaPlaylistFragmentResults: parseInt(null),
+              Expires: 3600
+            }, function (err, response) {
+              if (err) { return console.error(err); }
+              console.log('HLS Streaming Session URL: ' + response.HLSStreamingSessionURL);    
+              var playerElement = $('#videojs');
+                playerElement.show();
+                var player = videojs('videojs');
+                console.log('Created VideoJS Player');
+                player.src({
+                  src: response.HLSStreamingSessionURL,
+                  type: 'application/x-mpegURL'
+                });
+                console.log('Set player source');
+                player.play();
+                console.log('Starting playback');
+              
+            });
+          });
   

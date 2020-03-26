@@ -6,7 +6,8 @@ import datetime
 import pyrebase
 import json
 import numpy as np
-import cv2
+import cv2 as cv2
+from datetime import date
 # Create your views here.
 config = {
     # 'apiKey': "AIzaSyD7H6ZxUcR0M9acTTrg7cyV0Dxu4C27cUU",
@@ -33,6 +34,27 @@ auth = firebase.auth()
 authToken = ""
 uname = ""
 
+def dateChanged(request):
+    
+    
+    #authToken = auth.current_user.get('localId')
+    if request.method == 'POST':
+        mno = request.POST['mno']
+        duration = request.POST['duration']
+        splittedNew=duration.split('-')
+        curr_date=str(date.today()).split('-')
+        splittedCurrDate=curr_date
+        print(curr_date)
+        if splittedCurrDate[0]==splittedNew[0]:
+            if splittedCurrDate[1]==splittedNew[1]:
+                if splittedCurrDate[2]<splittedNew[2] :
+                    db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
+            elif splittedCurrDate[1]<splittedNew[1]:
+                db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
+        elif splittedCurrDate[0]<splittedNew[0]:
+            db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
+            
+    return HttpResponse("<h1>Date changed</h1>")
 
 def signIn(request):
     return render(request, "signIn.html")
@@ -87,32 +109,10 @@ def resetPassword(request):
     return render(request, "resetpassword.html")
 
 
+
+
 def capture_img(request):
-    cap = cv2.VideoCapture(0)
-    directory = r"G:\Sem 6\SGP\Django\git_hub\Videobased-Dynamic-Authentication\security\registeration images"
-    os.chdir(directory)
-    key = request.POST['mno']
-    i = 0
-    while(i < 10):
-        # Capture frame-by-frame
-        ret, frame = cap.read()
-        i = i+1
-        print(frame)
-        # Our operations on the frame come here
-        filename = str(key) + "_" + str(i)+'.jpg'
-        # writting the resulting frame
-        cv2.imwrite(filename, frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
 
-    # When everything done, release the capture
-    img = cv2.imread(filename)
-
-    cv2.imshow('Test image', img)
-
-    cv2.waitKey(0)
-    cap.release()
-    cv2.destroyAllWindows()
     return HttpResponse("<h1>Image Captured</h1>")
 
 
@@ -163,3 +163,9 @@ def addPerson(request):
 def logsOf(request):
 
     return render(request, 'logsOf.html')
+
+def unregistered(request):
+
+    return render(request, 'unregistered.html')
+
+
