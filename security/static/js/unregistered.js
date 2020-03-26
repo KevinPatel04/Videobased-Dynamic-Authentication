@@ -8,11 +8,10 @@ var firebaseConfig = {
     appId: "1:542414051699:web:4625898e615fba4dc88d06"
   };
   firebase.initializeApp(firebaseConfig);
-
+  var rootRef = firebase.database().ref();
 $(document).ready(function(){
+    //console.log("unregistered")
     
-    console.log("unregistered")
-    var rootRef = firebase.database().ref();
     rootRef.on("value", async function(snapshot) {
         $('#result').html("")
     $('#p').html('Unregistered for ')

@@ -7,7 +7,7 @@ var firebaseConfig = {
     messagingSenderId: "542414051699",
     appId: "1:542414051699:web:4625898e615fba4dc88d06"
   };
-  // Initialize Firebase
+  
   firebase.initializeApp(firebaseConfig);
   
   function unregistered(){
@@ -22,7 +22,7 @@ var firebaseConfig = {
   rootRef.on("value", async function(snapshot) {
     let snap = JSON.stringify(snapshot);
     data = JSON.parse(snap);
-    console.log(data)
+    //console.log(data)
   
   var searchField;
     $(document).ready(function() {
@@ -43,7 +43,7 @@ var firebaseConfig = {
             $("#result").append(
               '<ul style="list-style-type:none;padding:5px;border-bottom: 1px solid black;border-top: 1px solid black">' +
                 "<li>" +
-                "<img  id=\"dynamicImage\" style=\"height:50px;width:50px;padding:1px\" src=\""+data[key].dp+"\"/>"+
+                "<img  id=\"dynamicImage\" style=\"height:50px;width:50px;padding:1px\" src=\""+data[key].url[0]+"\"/>"+
                 data[key].name +" "+key+
                 "</li>" +
                 

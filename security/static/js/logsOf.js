@@ -46,7 +46,7 @@ $(document).ready(function() {
       root = JSON.parse(snap);
       registeredPerson = root["RegisteredPerson"];
       logs = root["Logs"];
-      profileImage = registeredPerson[id].dp;
+      profileImage = registeredPerson[id].url[0];
       $("#name").append(name);
       $("#contactNo").append(id);
       $("#p").attr("src", profileImage);
