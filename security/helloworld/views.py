@@ -33,28 +33,33 @@ storage = firebase.storage()
 auth = firebase.auth()
 authToken = ""
 uname = ""
+flag = 0
+
 
 def dateChanged(request):
-    
-    
+
     #authToken = auth.current_user.get('localId')
     if request.method == 'POST':
         mno = request.POST['mno']
         duration = request.POST['duration']
-        splittedNew=duration.split('-')
-        curr_date=str(date.today()).split('-')
-        splittedCurrDate=curr_date
+        splittedNew = duration.split('-')
+        curr_date = str(date.today()).split('-')
+        splittedCurrDate = curr_date
         print(curr_date)
-        if splittedCurrDate[0]==splittedNew[0]:
-            if splittedCurrDate[1]==splittedNew[1]:
-                if splittedCurrDate[2]<splittedNew[2] :
-                    db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
-            elif splittedCurrDate[1]<splittedNew[1]:
-                db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
-        elif splittedCurrDate[0]<splittedNew[0]:
-            db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
-            
+        if splittedCurrDate[0] == splittedNew[0]:
+            if splittedCurrDate[1] == splittedNew[1]:
+                if splittedCurrDate[2] < splittedNew[2]:
+                    db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(
+                        splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
+            elif splittedCurrDate[1] < splittedNew[1]:
+                db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(
+                    splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
+        elif splittedCurrDate[0] < splittedNew[0]:
+            db.child('RegisteredPerson').child(mno).child('ExpiryDate').set(
+                splittedNew[0]+"-"+splittedNew[2]+"-"+splittedNew[1])
+
     return HttpResponse("<h1>Date changed</h1>")
+
 
 def signIn(request):
     return render(request, "signIn.html")
@@ -73,22 +78,30 @@ def homePage(request):
 
 
 def postsign(request):
-    global uname
-    uname = request.POST['email']
-    passw = request.POST['pass']
-    global authToken
-    # db.child('users').child(uname).set(data)
-    # i = db.child('image').child('img').get()
-   # i = "https://firebasestorage.googleapis.com/v0/b/security-sgp.appspot.com/o/images%2Fdemo.jpg?alt=media&token=b887b2c7-a21e-4a64-a20d-043515578392"
-    try:
-        user = auth.sign_in_with_email_and_password(uname, passw)
-        # print(user)
-        authToken = auth.current_user.get('localId')
-    except:
-        messages.info(request, 'Invalid Credentials')
-        return render(request, 'signIn.html')
+    global flag
+    if flag == 0:
+        global uname
+        uname = request.POST['email']
+        passw = request.POST['pass']
+        global authToken
+        print(uname)
+        # db.child('users').child(uname).set(data)
+        # i = db.child('image').child('img').get()
+    # i = "https://firebasestorage.googleapis.com/v0/b/security-sgp.appspot.com/o/images%2Fdemo.jpg?alt=media&token=b887b2c7-a21e-4a64-a20d-043515578392"
+        try:
+            user = auth.sign_in_with_email_and_password(uname, passw)
+            # print(user)
+            flag = 1
+            authToken = auth.current_user.get('localId')
+        except:
+            messages.info(request, 'Invalid Credentials')
+            return render(request, 'signIn.html')
 
-    return render(request, "firstPage.html")
+        return render(request, "firstPage.html")
+    elif authToken != "":
+        return render(request, "firstPage.html")
+    else:
+        return render(request, "signIn.html")
 
 
 def back(request):
@@ -107,8 +120,6 @@ def resetPassword(request):
     global authToken
     authToken = ""
     return render(request, "resetpassword.html")
-
-
 
 
 def capture_img(request):
@@ -164,8 +175,7 @@ def logsOf(request):
 
     return render(request, 'logsOf.html')
 
+
 def unregistered(request):
 
     return render(request, 'unregistered.html')
-
-
