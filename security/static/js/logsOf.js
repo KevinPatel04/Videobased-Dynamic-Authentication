@@ -58,9 +58,13 @@ $(document).ready(function() {
       $("#p").attr("src", profileImage);
       $('#designation').append(registeredPerson[id].Designation)
       
-      date = registeredPerson[id].ExpiryDate.split('-');
-      $("#expiryDate").append([date[1],date[2],date[0]].join('-'));
-      $("#duration3").min = date[0]+'-'+date[1]+'-'+date[2];
+      if(registeredPerson[id].ExpiryDate != "NA"){
+        date = registeredPerson[id].ExpiryDate.split('-');
+        $("#expiryDate").append([date[1],date[2],date[0]].join('-'));
+      }else{
+        $("#expiryDate").append("LIFETIME");
+      }
+      
   
       $("#registeredBy").append(registeredPerson[id].RegisteredBy);
       d = new Date(registeredPerson[id].RegisteredOn);
@@ -171,9 +175,6 @@ $(document).ready(function() {
             
           ]
         });
-        var l = 80
-        var info = $("#dataTable_info").text()
-
         $("#dataTable").on("dblclick", "tr", function() {
           rowData = $("#dataTable")
             .DataTable()

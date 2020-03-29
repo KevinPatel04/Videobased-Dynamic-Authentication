@@ -3,7 +3,7 @@
 
 <head>
   <title>TechnoBugs</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <link rel = "stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://vjs.zencdn.net/6.6.3/video-js.css">
   <link
@@ -67,7 +67,7 @@
 		<div class="row" style="margin-right: 0;margin-left: 0;height: 100%">
     <div class="col-lg-8 col-md-8 col-sm-8"><br><br><div id="playerContainer"><video id="videojs" class="player video-js vjs-default-skin" controls autoplay></video></div>Live Camera Stream</div>
     <div class="col-lg-4 col-md-4 col-sm-4" style="background-color: lightgrey;" id="logs1">
-    	<ul class="d-none list-group" style="position:absolute;z-index:10;list-style-type:none;" id="result"></ul>
+    	<ul class="d-none list-group ml-5" style="position:absolute;z-index:10;list-style-type:none;" id="result"></ul>
       <div class="row" style="margin-right: 0;margin-left: 0;margin-top: 5px;">
         <label class="col-9" style="font-size: 30px;"><b> Logs</b> </label>
     		<div class="col-3" style="margin-right: 0;margin-top: 5px;"><button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal">Register</button>
@@ -86,23 +86,23 @@
           {% csrf_token %}
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp">
+              <input type="text" required class="form-control" id="name" name="name" aria-describedby="emailHelp">
             </div>
             <div class="form-group">
               <label for="designation">Designation</label>
-              <input type="text" class="form-control" id="designation" name="designation" aria-describedby="emailHelp">
+              <input type="text" required class="form-control" id="designation" name="designation" aria-describedby="emailHelp">
             </div>
             <div class="form-group">
               <label for="password">Contact Number</label>
-              <input type="tel" class="form-control" id="mno" name="Contact Number">
+              <input type="tel" required class="form-control" id="mno" name="Contact Number">
             </div>
-            <div class="form-group form-check">
+            <!-- <div class="form-group form-check">
               <input type="checkbox" class="form-check-input" id="check1" name="check" onclick="myCheck()">
               <label class="form-check-label" for="PermenantE">Permenant Employee</label>
-            </div>
+            </div> -->
             <div class="form-group">
               <label for="exampleInputPassword1" id="duration">Access Time Limit</label>
-              <input type="date" class="form-control" id="duration1" name="duration1" >
+              <input type="date" required class="form-control" id="duration1" name="duration1" >
             </div>
       </div>
       <div class="modal-footer">
@@ -119,7 +119,7 @@
     </div>
   </div>
 
-    <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
   <script type='text/javascript' src="static/js/jquery.min.js"> </script>
   
@@ -152,6 +152,8 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   var db = firebase.database();
+
+
 function myCheck(){
   var id = document.getElementById("duration");
   var id1 = document.getElementById("duration1");
@@ -239,8 +241,8 @@ function myCheck(){
       });
 
       $('#capture').click(function () {
+
          if ($("#mno").val() != "") {
-          
           $.ajax({
             type: "POST",
             url: "capture_img",

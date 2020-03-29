@@ -106,7 +106,31 @@ def resetPassword(request):
 
 
 def capture_img(request):
+    cap = cv2.VideoCapture(0)
+    directory = r"..\registeration images"
+    os.chdir(directory)
+    key = request.POST['mno']
+    i = 0
+    while(i < 10):
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        i = i+1
+        print(frame)
+        # Our operations on the frame come here
+        filename = str(key) + "_" + str(i)+'.jpg'
+        # writting the resulting frame
+        cv2.imwrite(filename, frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
+    # When everything done, release the capture
+    img = cv2.imread(filename)
+
+    cv2.imshow('Test image', img)
+
+    cv2.waitKey(0)
+    cap.release()
+    cv2.destroyAllWindows()
     return HttpResponse("<h1>Image Captured</h1>")
 
 def addPerson(request):
@@ -115,7 +139,8 @@ def addPerson(request):
         name = request.POST['name']
         mno = request.POST['mno']
         designation = request.POST['designation']
-        pEmp = request.POST['pEmp']
+        # pEmp = request.POST['pEmp']
+        pEmp = False;
         duration = request.POST['duration']
         date = str(datetime.datetime.now())
         if pEmp == True:
@@ -126,7 +151,8 @@ def addPerson(request):
                 'RegisteredBy': uname,
                 'RegisteredOn': date,
                 # 'Permenant Employee': pEmp,
-                'status': '1'
+                'ExpiryDate': 'NA',
+                'status': -1
             }
         else:
             data = {
@@ -137,7 +163,7 @@ def addPerson(request):
                 'RegisteredBy': uname,
                 'RegisteredOn': date,
                 'ExpiryDate': duration,
-                'status': '1'
+                'status': 1
             }
 
         db.child('RegisteredPerson').child(mno).set(data)
@@ -145,7 +171,7 @@ def addPerson(request):
         while (i < 10):
             i = i+1
             path_to_cloud = "Known_faces/"+str(mno)+"_" + str(i)+".jpg"
-            imgFile = r"G:\Sem 6\SGP\Django\git_hub\Videobased-Dynamic-Authentication\security\registeration images\\" + \
+            imgFile = r"..\registeration images" + \
                 str(mno) + "_" + str(i) + ".jpg"
             print(imgFile)
             public_url = storage.child(path_to_cloud).put(imgFile)
