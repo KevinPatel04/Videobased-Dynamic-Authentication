@@ -106,31 +106,27 @@ def resetPassword(request):
 
 
 def capture_img(request):
-    cap = cv2.VideoCapture(0)
-    directory = r"..\registeration images"
-    os.chdir(directory)
+    print("capturing Image")
     key = request.POST['mno']
+    cap = cv2.VideoCapture(0)
+    #directory = r".\registeration images"
+    #os.chdir(directory)
     i = 0
-    while(i < 10):
+    while (i<10):
         # Capture frame-by-frame
         ret, frame = cap.read()
         i = i+1
-        print(frame)
+        #print(frame)
         # Our operations on the frame come here
-        filename = str(key) + "_" + str(i)+'.jpg'
+        filename = "./registration images/"+str(key) + "_" + str(i)+'.jpg'
         # writting the resulting frame
         cv2.imwrite(filename, frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
 
     # When everything done, release the capture
-    img = cv2.imread(filename)
-
-    cv2.imshow('Test image', img)
-
     cv2.waitKey(0)
     cap.release()
     cv2.destroyAllWindows()
+    #print("image is captured")
     return HttpResponse("<h1>Image Captured</h1>")
 
 def addPerson(request):
@@ -140,42 +136,45 @@ def addPerson(request):
         mno = request.POST['mno']
         designation = request.POST['designation']
         # pEmp = request.POST['pEmp']
-        pEmp = False;
+        pEmp = False
         duration = request.POST['duration']
         date = str(datetime.datetime.now())
-        if pEmp == True:
-            data = {
-                'name': name,
-                'Contact No': mno,
-                'Occupation': designation,
-                'RegisteredBy': uname,
-                'RegisteredOn': date,
-                # 'Permenant Employee': pEmp,
-                'ExpiryDate': 'NA',
-                'status': -1
-            }
-        else:
-            data = {
-                'name': name,
-                'Contact No': mno,
-                'Occupation': designation,
-                # 'Permenant Employee': pEmp,
-                'RegisteredBy': uname,
-                'RegisteredOn': date,
-                'ExpiryDate': duration,
-                'status': 1
-            }
-
-        db.child('RegisteredPerson').child(mno).set(data)
+        #if pEmp == False:
+        #     # permanent employee
+        #     data = {
+        #         'name': name,
+        #         'Contact No': mno,
+        #         'Occupation': designation,
+        #         'RegisteredBy': uname,
+        #         'RegisteredOn': date,
+        #         'ExpiryDate': 'NA',
+        #         'status': -1
+        #     }
+        # else:
+            # temporary employee
+        #print("Hello")
+        url = []
         i = 0
         while (i < 10):
-            i = i+1
-            path_to_cloud = "Known_faces/"+str(mno)+"_" + str(i)+".jpg"
-            imgFile = r"..\registeration images" + \
-                str(mno) + "_" + str(i) + ".jpg"
-            print(imgFile)
-            public_url = storage.child(path_to_cloud).put(imgFile)
-            os.remove(imgFile)
+	        i = i+1
+	        path_to_cloud = "Known_faces/"+str(mno)+"_" + str(i)+".jpg"
+	        imgFile = "./registration images/" + str(mno) + "_" + str(i) + ".jpg"
+	        #print(imgFile)
+	        public_url = storage.child(path_to_cloud).put(imgFile)
+	        public_url = storage.child(path_to_cloud).get_url(None)
+	        url.append(public_url)
+	        os.remove(imgFile)
+        data = {
+            'name': name,
+            'Contact No': mno,
+            'Occupation': designation,
+            'RegisteredBy': uname,
+            'RegisteredOn': date,
+            'ExpiryDate': duration,
+            'status': 1,
+            'url' : url
+        }
+        db.child('RegisteredPerson').child(mno).set(data)
     return HttpResponse("<h1>form submitted</h1>")
 
 
