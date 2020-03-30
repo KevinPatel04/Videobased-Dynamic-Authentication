@@ -138,7 +138,8 @@ def addPerson(request):
         # pEmp = request.POST['pEmp']
         pEmp = False
         duration = request.POST['duration']
-        date = str(datetime.datetime.now())
+        # date = str(datetime.datetime.now())
+        date = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
         #if pEmp == False:
         #     # permanent employee
         #     data = {

@@ -56,7 +56,8 @@ var firebaseConfig = {
       //console.log("-----"+data1.name)
       return {
         name: data1.name,
-        designation: data1.Occupation
+        designation: data1.Designation,
+        key: userID
       };
     });
     
@@ -144,12 +145,7 @@ var firebaseConfig = {
     var data = {};
     var searchField;
     
-  
-   
-    
-  
-  
-  
+
     $(document).ready(function() {
       $("#video_stream").load("monitor");
       var rootRef = firebase
@@ -159,7 +155,7 @@ var firebaseConfig = {
     
     rootRef.on("value", async function(snapshot) {
       let snap = JSON.stringify(snapshot);
-      data = JSON.parse(snap);
+      var data = JSON.parse(snap);
       $.ajaxSetup({ cache: false });
       $("#search").keyup(function() {
         $("#result").html("");
@@ -265,7 +261,7 @@ var firebaseConfig = {
                 '<div class="card-body">' +
                 '<h5 class="card-title">' + userData.name + '</h5>' +
                 '<div >' + userData.designation + '</div>' + 
-                '<span class="card-text text-muted" style="font-size:12px;">' + userKey + '</span>' +
+                '<span class="card-text text-muted" style="font-size:12px;">' + userData.key + '</span>' +
                 '<small class="float-right  text-black-50"><i class="far fa-clock"></i> ' + logs1.Intime + '</small>' +
                 '</div>' +
                 '</div>' +
@@ -298,7 +294,7 @@ var firebaseConfig = {
                 '<div class="card-body">' +
                 '<h5 class="card-title">' + userData.name + '</h5>' +
                 '<div >' + userData.designation + '</div>' + 
-                '<span class="card-text text-muted" style="font-size:12px;">' + userKey + '</span>' +
+                '<span class="card-text text-muted" style="font-size:12px;">' + userData.key + '</span>' +
                 '<small class="float-right  text-black-50"><i class="far fa-clock"></i> ' + logs1.Outtime + '</small>' +
                 '</div>' +
                 '</div>' +

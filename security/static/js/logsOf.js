@@ -91,12 +91,12 @@ $(document).ready(function() {
             if (logs[dates][id][total_entries]["Intime"])
               data2.push("<center><i onclick=\"openmodal('"+logs[dates][id][total_entries]["InURL"]+"','"+registeredPerson[id].name+": "+dates+" "+logs[dates][id][total_entries]["Intime"]+"')\" class='fas fa-2x fa-image text-success'></i></center>");
               data2.push(logs[dates][id][total_entries]["Intime"]);
-            if (logs[dates][id][total_entries]["Outtime"]) {
+            if (logs[dates][id][total_entries]["Outtime"]!='00:00' && logs[dates][id][total_entries]["OutURL"]!='URL') {
               data2.push("<center><i onclick=\"openmodal('"+logs[dates][id][total_entries]["OutURL"]+"','"+registeredPerson[id].name+": "+dates+" "+logs[dates][id][total_entries]["Outtime"]+"')\" class='fas fa-2x fa-image text-danger'></i></center>");
               data2.push(logs[dates][id][total_entries]["Outtime"]);
             } else {
               data2.push("NA");
-              data2.push("He is In.");
+              data2.push("Still Inside");
             }
           }
           data.push(data2);
@@ -149,12 +149,12 @@ $(document).ready(function() {
                 if (logs[dates][contactNo][total_entries]["Intime"])
                   data2.push("<center><i onclick=\"openmodal('"+logs[dates][contactNo][total_entries]["InURL"]+"','"+registeredPerson[contactNo].name+": "+dates+" "+logs[dates][contactNo][total_entries]["Intime"]+"')\" class='fas fa-2x fa-image text-success'></i></center>");
                   data2.push(logs[dates][contactNo][total_entries]["Intime"]);
-                if (logs[dates][contactNo][total_entries]["Outtime"]) {
+                if (logs[dates][contactNo][total_entries]["Outtime"]!='00:00' && logs[dates][contactNo][total_entries]["OutURL"]!='URL') {
                   data2.push("<center><i onclick=\"openmodal('"+logs[dates][contactNo][total_entries]["OutURL"]+"','"+registeredPerson[contactNo].name+": "+dates+" "+logs[dates][contactNo][total_entries]["Outtime"]+"')\" class='fas fa-2x fa-image text-danger'></i></center>");
                   data2.push(logs[dates][contactNo][total_entries]["Outtime"]);
                 } else {
                   data2.push("NA");
-                  data2.push("He is In.");
+                  data2.push("Still Inside");
                 }
               }
               data.push(data2);
