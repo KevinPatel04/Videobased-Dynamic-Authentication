@@ -168,7 +168,7 @@ def addPerson(request):
         data = {
             'name': name,
             'Contact No': mno,
-            'Occupation': designation,
+            'Designation': designation,
             'RegisteredBy': uname,
             'RegisteredOn': date,
             'ExpiryDate': duration,
@@ -176,6 +176,10 @@ def addPerson(request):
             'url' : url
         }
         db.child('RegisteredPerson').child(mno).set(data)
+        data = {
+            'key' : mno
+        }
+        db.child('Updated').set(data)
     return HttpResponse("<h1>form submitted</h1>")
 
 
